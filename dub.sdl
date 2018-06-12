@@ -1,5 +1,5 @@
 name "arrogant"
-description "A HTML5+CSS3.1 DOM Library"
+description "Fully conformant HTML5 dom library with CSS4 selectors."
 authors "Andrea Fontana"
 copyright "Copyright © 2018, 2night.it"
 license "mit"
