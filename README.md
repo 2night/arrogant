@@ -1,5 +1,5 @@
 # arrogant
-Fully conformant HTML5 dom with CSS4 selectors. Based on [Modest](https://github.com/lexborisov/Modest)
+Fully conformant HTML5 dom library with CSS4 selectors. Based on [Modest](https://github.com/lexborisov/Modest)
 
 # how to build & install modest.
 
