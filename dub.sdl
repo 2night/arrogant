@@ -1,0 +1,15 @@
+name "arrogant"
+description "A HTML5+CSS3.1 DOM Library"
+authors "Andrea Fontana"
+copyright "Copyright © 2018, 2night.it"
+license "mit"
+libs "modest"
+
+configuration "arrogant" {
+	targetType "autodetect"
+}
+
+configuration "arrogant_test_app" {
+	targetType "executable"
+	versions "arrogant_test_app"
+}
