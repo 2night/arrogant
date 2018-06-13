@@ -8,8 +8,10 @@ Just fetch source code and compile.
 
 ```
 git clone https://github.com/2night/arrogant.git
-git submodule update --recursive
+cd arrogant
+git submodule update --init
 cd c/Modest
+make
 sudo make install
 ```
 
