@@ -1,5 +1,5 @@
 # arrogant
-Fully conformant HTML5 dom library with CSS4 selectors. Based on [Modest](https://github.com/lexborisov/Modest)
+Fully conformant HTML5 dom library with CSS4 selectors. Based on [Modest](https://github.com/lexborisov/Modest).
 
 # how to build & install modest.
 
@@ -19,7 +19,7 @@ sudo make install
 dub -c arrogant_test_app
 ```
 
-# how to use arrogant (simple example)
+# hello world
 
 ```d
 import arrogant;
@@ -40,6 +40,40 @@ void main()
    assert(tree.document.innerHTML == "<html><head></head><body><div>Hello D!</div></body></html>");
 }
 ```
+# get data from webpage
+
+```d
+import arrogant;
+import std.net.curl;
+import std.stdio : writeln, stdout;
+
+void main()
+{
+   auto src = "https://forum.dlang.org".get;
+   auto arrogant = Arrogant();
+   auto tree = arrogant.parse(src);
+   size_t cnt = 0;
+
+   writeln("Recent posts on forum.dlang.org:\n");
+   
+   // Search for summary divs
+   foreach(post; tree.byClass("forum-index-col-lastpost"))
+   {
+      string title = post.byClass("forum-postsummary-subject").front["title"];
+      string author = post.byClass("forum-postsummary-author").front["title"];
+      string date = post.byCssSelector("span.forum-postsummary-time > span").front["title"];
+
+      writeln("Title: ", title);
+      writeln("By: ", author);
+      writeln("Date: ", date);
+      writeln("--------------");
+
+      cnt++;
+   }
+
+   writeln("Total: ", cnt, " posts");
+ }
+ ```
 
 # more
 
