@@ -1,7 +1,7 @@
 # arrogant
 Fully conformant HTML5 dom library with CSS4 selectors. Based on [Modest](https://github.com/lexborisov/Modest).
 
-# how to build & install modest.
+# prerequisites: how to build & install modest
 
 Modest is written in pure C, without any external dependency.
 Just fetch source code and compile.
