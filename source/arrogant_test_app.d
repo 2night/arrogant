@@ -152,5 +152,33 @@ version(arrogant_test_app)
          assert(container.firstChild.innerText == "outside");
          assert(tree.byTagName("a").length == 1);           
       }
+
+      // Get summaries from forum.dlang.org
+      {
+         import std.net.curl;
+
+         auto src = "https://forum.dlang.org".get;
+         auto arrogant = Arrogant();
+         auto tree = arrogant.parse(src);
+         size_t cnt = 0;
+
+         writeln("Recent posts on forum.dlang.org:\n");
+         foreach(post; tree.byClass("forum-index-col-lastpost"))
+         {
+            string title = post.byClass("forum-postsummary-subject").front["title"];
+            string author = post.byClass("forum-postsummary-author").front["title"];
+            string date = post.byCssSelector("span.forum-postsummary-time > span").front["title"];
+
+            writeln("Title: ", title);
+            writeln("By: ", author);
+            writeln("Date: ", date);
+            writeln("--------------");
+
+            cnt++;
+         }
+
+         writeln("Total: ", cnt, " posts");
+         assert(cnt != 0);
+      }
    }
 }
