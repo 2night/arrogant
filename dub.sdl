@@ -13,3 +13,8 @@ configuration "arrogant_test_app" {
 	targetType "executable"
 	versions "arrogant_test_app"
 }
+
+configuration "arrogant_tests" {
+	targetType "executable"
+	versions "arrogant_tests"
+}

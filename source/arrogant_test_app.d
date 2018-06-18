@@ -2,15 +2,17 @@ version(arrogant_test_app)
 {
    import arrogant;
    import std.stdio : writeln, stdout;
-      
+   
    void main()
    {
+      writeln("Simple example --");
+
       // Simple example
       {
          auto src = `<html><head></head><body><div>Hello World</div></body></html>`;
          auto arrogant = Arrogant();
          auto tree = arrogant.parse(src);
-         
+
          // Change div content from "Hello World!" to "Hello D!"
          tree.byTagName("div").front.innerText = "Hello D!";
 
@@ -20,6 +22,8 @@ version(arrogant_test_app)
          assert(tree.document.innerHTML == "<html><head></head><body><div>Hello D!</div></body></html>");
       }
 
+      writeln("Css selector --");
+      
       // Css Selector
       {
          auto src = `
@@ -45,7 +49,9 @@ version(arrogant_test_app)
          writeln("Selector: div > img + a  Result:", url);
          assert(url == "right_link.html");
       }
-
+     
+      writeln("Ranges --");
+      
       // Ranges
       {
          import std.algorithm: startsWith, filter, each;
@@ -63,20 +69,23 @@ version(arrogant_test_app)
          auto arrogant = Arrogant();
          auto tree = arrogant.parse(src);
          
-         // Add rel="nofollow" to all http/https links 
+         // Add rel="nofollow" to all http/https links
+         // https://issues.dlang.org/show_bug.cgi?id=11934 "each" implementation is bugged 
          tree
          .byAttributeKey("href")
          .filter!(x => x["href"].startsWith("http://") || x["href"].startsWith("https://"))
-         .each!(x => x["rel"] = "nofollow");
+         .each!(e => e["rel"] = "nofollow");
 
          writeln(tree.byAttributeKey("href"));
-
+         
          // Just one must be changed
          assert(tree.byAttribute("rel", "nofollow").length == 1);
          assert(tree.byAttribute("rel", "nofollow").front.innerText == "D programming language");
          assert("rel" in tree.byAttribute("href", "http://www.dlang.org").front);
       }
-
+      
+      writeln("Cloning --");
+      
       // Cloning
       {
          auto src = `
@@ -125,7 +134,9 @@ version(arrogant_test_app)
          assert(tree.byCssSelector("body > div").length == 3);
          assert(tree.byCssSelector("body > div span.name")[1].innerText == "orange");
       }
-
+      
+      writeln("Moving --");
+      
       // Moving elements
       {
          auto src = `
@@ -139,7 +150,6 @@ version(arrogant_test_app)
 
          auto arrogant = Arrogant();
          auto tree = arrogant.parse(src);
-
          auto link = tree.byTagName("a").front;
          auto container = tree.byId("container").front;
 
@@ -156,6 +166,7 @@ version(arrogant_test_app)
       // Get summaries from forum.dlang.org
       {
          import std.net.curl;
+         import std.range;
 
          auto src = "https://forum.dlang.org".get;
          auto arrogant = Arrogant();
@@ -163,7 +174,7 @@ version(arrogant_test_app)
          size_t cnt = 0;
 
          writeln("Recent posts on forum.dlang.org:\n");
-         foreach(post; tree.byClass("forum-index-col-lastpost"))
+         foreach(post; tree.byClass("forum-index-col-lastpost").take(2))
          {
             string title = post.byClass("forum-postsummary-subject").front["title"];
             string author = post.byClass("forum-postsummary-author").front["title"];
@@ -181,4 +192,59 @@ version(arrogant_test_app)
          assert(cnt != 0);
       }
    }
+}
+
+// Some internal tests
+version(arrogant_tests)
+{
+
+   import arrogant;
+   import std.stdio : writeln, stdout;
+
+   // Testing reference count
+   unittest {
+      Node n;
+      {
+         auto src = `<html><head></head><body><div>Hello World</div></body></html>`;
+         auto arrogant = Arrogant();
+         auto tree = arrogant.parse(src);
+         
+         // n lifespan is longer than parent one
+         n = tree.byTagName("div").front;
+      }
+
+      assert(n.toString == "<div>Hello World</div>");
+   }  
+
+   unittest {
+      NodeRange r;
+      {
+         auto src = `<html><head></head><body><div>Hello World</div></body></html>`;
+         auto arrogant = Arrogant();
+         auto tree = arrogant.parse(src);
+         
+         // n lifespan is longer than parent one
+         r = tree.byTagName("div");
+      }
+
+      assert(r.front.toString == "<div>Hello World</div>");
+   } 
+
+   unittest {
+      Tree tree2;
+      {
+         Tree tree3;
+         auto src = `<html><head></head><body><div>Hello World</div></body></html>`;
+         auto arrogant = Arrogant();
+         auto tree = arrogant.parse(src);
+         
+         tree2 = tree;
+         tree3 = tree2;
+      }
+
+      assert(tree2.byTagName("div").front.toString == "<div>Hello World</div>");
+   } 
+
+   void main() {}
+
 }
