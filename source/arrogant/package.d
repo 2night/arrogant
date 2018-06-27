@@ -330,7 +330,7 @@ struct Node
    */
    Node clone(Tree destination) { return clone(destination.myhtml_tree); }
    
-   // Create a copy of this node
+   /// Create a copy of this node
    Node clone() { return clone(myhtml_node_tree(myhtml_tree_node)); }
 
    ///
@@ -554,7 +554,7 @@ struct Node
       // Clone a single node without children
       myhtml_tree_node_t* cloneNode(myhtml_tree_t* _destination, myhtml_tree_node_t* _node)
       {
-         // Create a new node rooted on destination treee
+         // Create a new node rooted on destination tree
          auto ret = myhtml_node_create (
             _destination,
             _node.tag_id,
@@ -727,18 +727,26 @@ struct Tree
    this(this) 
    { 
       acquire(myhtml_tree);
+      valid = true;
    }
    
    void opAssign(Tree rhs) 
    {      
       acquire(rhs.myhtml_tree);
-      release(myhtml_tree);
+      
+      if (valid) 
+         release(myhtml_tree);
+      
       myhtml_tree = rhs.myhtml_tree;
+      valid = true;
    }
 
    ~this() { 
-      release(myhtml_tree);
+      if (valid)
+         release(myhtml_tree);
    }
+
+   @property isValid() { return valid; }
 
 private:
    
@@ -769,9 +777,11 @@ private:
       auto status = myhtml_tree_init(myhtml_tree, parent);
       if (MYHTML_FAILED(status)) throw new ArrogantException(status);
       acquire(myhtml_tree);
+      valid = true;
    }
 
-   myhtml_tree_t* myhtml_tree;
+   bool valid = false;
+   myhtml_tree_t* myhtml_tree = null;
 
    static size_t[myhtml_tree_t*]  refCount;
 
@@ -820,8 +830,12 @@ struct Arrogant
    void opAssign(Arrogant rhs) 
    { 
       acquire(rhs.myhtml);
-      release(myhtml);
+      
+      if (valid)
+         release(myhtml);
+      
       myhtml = rhs.myhtml;
+      valid = true;
    }
 
    ///
@@ -830,9 +844,11 @@ struct Arrogant
       initArrogant(options, threadCount, queueSize);
    }
 
-   this(this) { acquire(myhtml); }
+   this(this) { acquire(myhtml); valid = true; }
    
-   ~this() { release(myhtml); }
+   ~this() { if (valid) release(myhtml); }
+   
+   @property isValid() { return valid; }
    
    private:
 
@@ -847,9 +863,12 @@ struct Arrogant
 
       if (MYHTML_FAILED(status))
          throw new ArrogantException(status);
+
+      valid = true;
    }
 
    myhtml_t* myhtml = null;
+   bool valid = false;
 
    static size_t[myhtml_t*]  refCount;
    static void acquire(myhtml_t* ptr) { refCount[ptr]++; }

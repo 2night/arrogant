@@ -202,6 +202,7 @@ version(arrogant_tests)
    import std.stdio : writeln, stdout;
 
    // Testing reference count
+   /*
    unittest {
       Node n;
       {
@@ -215,7 +216,9 @@ version(arrogant_tests)
 
       assert(n.toString == "<div>Hello World</div>");
    }  
+*/
 
+/*
    unittest {
       NodeRange r;
       {
@@ -229,7 +232,7 @@ version(arrogant_tests)
 
       assert(r.front.toString == "<div>Hello World</div>");
    } 
-
+*/
    unittest {
       Tree tree2;
       {
