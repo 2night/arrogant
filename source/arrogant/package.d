@@ -666,6 +666,8 @@ struct Tree
 {
    //mixin CObjectWrapper!(myhtml_tree_t*, tree => myhtml_tree_destroy(tree));
 
+   Node createNode(MyHtmlTagId  tag, MyHtmlNamespace ns = MyHtmlNamespace.html) { return Node(this, tag, ns); }
+
    /// See: `Node.byXXXX`
    auto byClass(string className) { return document.byClass(className); }
 
