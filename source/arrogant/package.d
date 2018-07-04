@@ -65,8 +65,11 @@ struct Attribute
 struct Node
 {
    @disable this();
-   
+
+   /// Check if node is null / empty   
    bool isNull() { return myhtml_tree_node == null; }
+
+
    /** 
    * Get the tag id for this node (ex: a, div, body, ...) 
    * Examples:
@@ -665,8 +668,14 @@ private:
 struct Tree
 {
    //mixin CObjectWrapper!(myhtml_tree_t*, tree => myhtml_tree_destroy(tree));
-
+   /// Create a new node owned by this tree
    Node createNode(MyHtmlTagId  tag, MyHtmlNamespace ns = MyHtmlNamespace.html) { return Node(this, tag, ns); }
+   
+   /// Fast way to create a text node
+   Node createTextNode(string text) { auto n = createNode(MyHtmlTagId._text); n.text = text; return n; }
+
+   /// Fast way to create a comment node
+   Node createCommentNode(string text) { auto n = createNode(MyHtmlTagId._comment); n.text = text; return n; }
 
    /// See: `Node.byXXXX`
    auto byClass(string className) { return document.byClass(className); }
