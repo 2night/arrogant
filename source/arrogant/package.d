@@ -345,6 +345,36 @@ struct Node
    /** Detach node from tree without destroying */
    void detach() { myhtml_node_remove(myhtml_tree_node); }
 
+   /// Fast way to append a text node
+   void appendText(string s) 
+   {
+      // Create a text node
+      auto text_node = myhtml_node_create (
+         myhtml_node_tree(myhtml_tree_node),
+         MyHtmlTagId ._text,
+         MyHtmlNamespace.html
+      );
+
+      Node nodeToAppend = Node(text_node);
+      nodeToAppend.text = s;
+      appendChild(nodeToAppend);
+   }
+
+   /// Fast way to append a comment node
+   void appendComment(string s) 
+   {
+      // Create a text node
+      auto text_node = myhtml_node_create (
+         myhtml_node_tree(myhtml_tree_node),
+         MyHtmlTagId ._comment,
+         MyHtmlNamespace.html
+      );
+
+      Node nodeToAppend = Node(text_node);
+      nodeToAppend.text = s;
+      appendChild(nodeToAppend);
+   }
+
    ///
    void appendChild(Node n) { n.detach(); myhtml_node_append_child(myhtml_tree_node, n.myhtml_tree_node); }
    
