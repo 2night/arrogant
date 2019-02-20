@@ -925,7 +925,7 @@ struct Arrogant
       {
          myhtml_destroy(ptr);
          refCount.remove(ptr);
-         writeln("RELEASED. Remained: ", refCount.length);
+         //writeln("RELEASED. Remained: ", refCount.length);
       }
    }
    
