@@ -15,6 +15,7 @@ git submodule update --init
 cd c/Modest
 make
 sudo make install
+sudo ldconfig
 ```
 
 # run an example
