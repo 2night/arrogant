@@ -680,7 +680,6 @@ private:
 /** A html tree */
 struct Tree
 {
-   //mixin CObjectWrapper!(myhtml_tree_t*, tree => myhtml_tree_destroy(tree));
    /// Create a new node owned by this tree
    Node createNode(MyHtmlTagId  tag, MyHtmlNamespace ns = MyHtmlNamespace.html) { return Node(this, tag, ns); }
    
@@ -830,8 +829,6 @@ private:
 
 struct Arrogant
 {
-   //mixin CObjectWrapper!(myhtml_t*, myhtml => myhtml_destroy(myhtml));
-
    /// Parse a html document
    Tree parse(T)(T html, MyEncodingList encoding = MyEncodingList.default_) if (isSomeString!T)
    {
@@ -897,9 +894,8 @@ struct Arrogant
    static size_t[myhtml_t*]  refCount;
    static void acquire(myhtml_t* ptr) { refCount[ptr]++; }
    static void release(myhtml_t* ptr) 
-   { 
-      import std.stdio: stdout;
-     size_t cnt = refCount[ptr];
+   {
+      size_t cnt = refCount[ptr];
    
       assert(cnt > 0);
       refCount[ptr] = cnt - 1;
@@ -908,7 +904,6 @@ struct Arrogant
       {
          myhtml_destroy(ptr);
          refCount.remove(ptr);
-         //writeln("RELEASED. Remained: ", refCount.length);
       }
    }
    
