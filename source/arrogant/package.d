@@ -536,24 +536,7 @@ struct Node
       Tree.acquire(tree.myhtml_tree);
    }
 
-
-   pure this(this) 
-   {
-      // Workaround for issue https://issues.dlang.org/show_bug.cgi?id=13300
-      auto assumePure(T)(T t)
-      if (isFunctionPointer!T || isDelegate!T)
-      {
-         enum attrs = functionAttributes!T | FunctionAttribute.pure_;
-         return cast(SetFunctionAttributes!(T, functionLinkage!T, attrs)) t;
-      }  
-
-      auto node = assumePure(&myhtml_node_tree)(myhtml_tree_node);
-      assumePure(&(Tree.acquire))(node);
-
-
-      // If 13300 is fixed, just this line is needed:
-      //Tree.acquire(myhtml_node_tree(myhtml_tree_node));
-   }
+   this(this) { Tree.acquire(myhtml_node_tree(myhtml_tree_node)); }
    
    void opAssign(Node rhs) 
    { 
