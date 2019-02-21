@@ -6,8 +6,8 @@ import arrogant.c.modest;
 public import arrogant.c.common;
 
 import std.traits;
-import std.conv;
-import std.typecons : Nullable, Flag, Yes, No, RefCounted, RefCountedAutoInitialize;
+import std.conv : to;
+import std.typecons : Flag, Yes, No;
 import std.string : toStringz; 
 
 /** Use this enum with `node.byAttribute()` search  */
@@ -96,6 +96,8 @@ struct Node
    /** Read an attribute from node */
    auto opIndex(string attribute) 
    { 
+      import std.typecons : Nullable;
+
       Nullable!string value;
       auto attr = myhtml_attribute_by_key (myhtml_tree_node, attribute.toStringz, attribute.length);
 
