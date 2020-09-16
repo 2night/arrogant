@@ -1544,7 +1544,13 @@ extern(C)
 
 
     int fflush_unlocked(FILE*) @nogc nothrow;
-    alias size_t = c_ulong;
+    version (Windows)
+    {
+    }
+    else
+    {
+        alias size_t = c_ulong;
+    }
 
 
     alias blkcnt_t = c_long;
