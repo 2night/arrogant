@@ -1,7 +1,7 @@
 # arrogant
 Fully conformant HTML5 dom library with CSS4 selectors. Based on [Modest](https://github.com/lexborisov/Modest).
 
-Tested on Linux. Should work fine on OSX. Never tried on Windows. 
+Tested on Linux. Should work fine on OSX and Windows. 
 
 # prerequisites: how to build & install modest
 
